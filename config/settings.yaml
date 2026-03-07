@@ -15,7 +15,7 @@ ollama:
   endpoint: "http://localhost:11434"
 
 advanced:
-  clone_and_test: true
+  clone_and_test: false
   comparative_analysis: true
   max_repo_size_mb: 500
   test_timeout_seconds: 60
