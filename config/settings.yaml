@@ -1,0 +1,21 @@
+search:
+  queries:
+    - "LLM"
+    - "AI agent"
+    - "machine learning"
+    - "deep learning"
+    - "transformer"
+    - "diffusion model"
+  min_stars: 5
+  max_repos: 10
+  created_within_days: 1
+
+ollama:
+  model: "llama3.2"
+  endpoint: "http://localhost:11434"
+
+advanced:
+  clone_and_test: true
+  comparative_analysis: true
+  max_repo_size_mb: 500
+  test_timeout_seconds: 60
