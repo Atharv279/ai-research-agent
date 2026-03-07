@@ -1,44 +1,37 @@
 name: Daily AI Research
-
 on:
   schedule:
-    - cron: "0 8 * * *"  # Daily at 8 AM UTC
-  workflow_dispatch:  # Allow manual trigger
-
+    - cron: "0 8 * * *"
+  workflow_dispatch:
 permissions:
   contents: write
-
 jobs:
   research:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Configure git identity
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Install Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
           ollama serve &
           sleep 5
           ollama pull llama3.2:3b
-
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
+        run: |
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+      - name: Lint
+        run: ruff check main.py src/ --select=E,F --ignore=E501
       - name: Run AI Research Agent
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python main.py
-
       - name: Push report
         run: git push || echo "Nothing to push"

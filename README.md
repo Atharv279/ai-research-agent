@@ -1,98 +1,73 @@
-# AI Research Agent
+<div align="center">
 
-Automated agent that discovers, analyzes, and reports on new AI/ML repositories on GitHub — daily.
+# 🔬 AI Research Agent
 
-## What It Does
+[![Daily Research](https://github.com/USER/ai-research-agent/actions/workflows/daily-research.yml/badge.svg)](https://github.com/USER/ai-research-agent/actions/workflows/daily-research.yml)
+![Python](https://img.shields.io/badge/Python-3.11+-3776ab?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Ollama](https://img.shields.io/badge/LLM-Ollama%20Local-purple)
 
-1. **Searches** GitHub for newly created AI repositories (LLMs, agents, deep learning, transformers, etc.)
-2. **Analyzes** each repo: README, language breakdown, dependencies, tech stack
-3. **Summarizes** using a local Ollama LLM
-4. **Clones & tests** repositories — detects test frameworks, runs tests, captures results
-5. **Compares** repositories with scoring and LLM-written comparative narratives
-6. **Commits** a daily markdown report to `reports/`
+**Automated AI research agent that discovers, analyzes, clones, tests, and compares new GitHub repositories daily using local LLM summarization.**
+
+</div>
+
+---
+
+## Architecture
+
+```mermaid
+graph TD
+    A[🔍 GitHub Search API] -->|New AI Repos| B[📖 Repo Analyzer]
+    B -->|README + Languages| C[🤖 Ollama Summarizer]
+    C --> D[📋 Report Generator]
+    B -->|Clone & Test| E[🧪 Repo Tester]
+    E -->|pytest/jest/cargo| D
+    C -->|Grouped Analysis| F[📊 Comparator]
+    F -->|Rankings + Narrative| D
+    D -->|Markdown Report| G[📁 Git Commit]
+    G -->|Daily Push| H[🚀 GitHub Actions]
+```
+
+## Features
+
+| Feature | Description |
+|---------|------------|
+| **GitHub Search** | Finds repos created in last 24h matching AI/ML queries |
+| **Deep Analysis** | Fetches README, language breakdown, dependency detection |
+| **LLM Summaries** | Local Ollama generates structured analysis (what/innovations/impact) |
+| **Clone & Test** | Clones repos, detects test frameworks, runs tests with timeout |
+| **Comparative** | Scores repos, groups by language, LLM-written comparative narrative |
+| **Daily Automation** | GitHub Actions installs Ollama in CI, runs full pipeline |
+
+## Latest Report Preview
+
+Reports are saved to \`reports/YYYY-MM-DD.md\` with per-repo analysis, test results, rankings, and comparative narratives.
 
 ## Setup
 
-### Prerequisites
-
-- Python 3.11+
-- [Ollama](https://ollama.com/) installed and running
-- Git
-
-### Install
-
 ```bash
 pip install -r requirements.txt
-ollama pull llama3.2
-```
-
-### Configure
-
-Edit `config/settings.yaml` to customize:
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `search.queries` | Broad AI/ML terms | GitHub search keywords |
-| `search.min_stars` | 5 | Minimum star count |
-| `search.max_repos` | 10 | Max repos per run |
-| `ollama.model` | llama3.2 | Ollama model name |
-| `advanced.clone_and_test` | true | Clone repos and run tests |
-| `advanced.comparative_analysis` | true | Generate comparative reports |
-
-### Run
-
-```bash
-# Full pipeline
-python main.py
-
-# Without git commit
+pip install -r dev-requirements.txt  # For linting
+ollama pull llama3.2:3b
 python main.py --no-commit
-
-# Skip cloning/testing
-python main.py --no-clone
-
-# Skip comparative analysis
-python main.py --no-compare
-
-# Custom config
-python main.py --config path/to/settings.yaml
 ```
 
-Set `GITHUB_TOKEN` for higher API rate limits:
+## CLI Options
+
+| Flag | Description |
+|------|------------|
+| \`--no-commit\` | Skip git commit |
+| \`--no-clone\` | Skip cloning and testing repos |
+| \`--no-compare\` | Skip comparative analysis |
+| \`--config PATH\` | Custom config file |
+
+## Configuration
+
+Edit \`config/settings.yaml\` — search queries, Ollama model, max repos, test timeouts.
+
+## Development
 
 ```bash
-export GITHUB_TOKEN=ghp_your_token_here
-python main.py
-```
-
-## Automation
-
-The included GitHub Actions workflow (`.github/workflows/daily-research.yml`) runs the agent daily at 8 AM UTC. It installs Ollama in the runner, pulls the model, runs the agent, and pushes the report.
-
-You can also trigger it manually from the Actions tab.
-
-## Reports
-
-Reports are saved to `reports/YYYY-MM-DD.md` and include:
-
-- Per-repo analysis with metadata, tech stack, and LLM summary
-- Test results (pass/fail counts, duration, framework)
-- Comparative rankings with composite scoring
-- LLM-written comparative narrative
-
-## Project Structure
-
-```
-├── main.py                  # CLI entry point
-├── config/settings.yaml     # Configuration
-├── src/
-│   ├── github_search.py     # GitHub API search
-│   ├── repo_analyzer.py     # README, languages, dependencies
-│   ├── summarizer.py        # Ollama LLM summaries
-│   ├── repo_tester.py       # Clone, detect tests, run tests
-│   ├── comparator.py        # Scoring and comparative analysis
-│   ├── report_generator.py  # Markdown report generation
-│   └── git_ops.py           # Git commit operations
-├── reports/                 # Generated daily reports
-└── .github/workflows/       # GitHub Actions automation
+ruff check src/ main.py --select=E,F --ignore=E501
+mypy main.py --ignore-missing-imports
 ```
