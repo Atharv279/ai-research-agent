@@ -2,7 +2,7 @@
 
 # 🔬 AI Research Agent
 
-[![Daily Research](https://github.com/USER/ai-research-agent/actions/workflows/daily-research.yml/badge.svg)](https://github.com/USER/ai-research-agent/actions/workflows/daily-research.yml)
+[![Daily Research](https://github.com/Atharv279/ai-research-agent/actions/workflows/daily-research.yml/badge.svg)](https://github.com/Atharv279/ai-research-agent/actions/workflows/daily-research.yml)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776ab?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Ollama](https://img.shields.io/badge/LLM-Ollama%20Local-purple)
