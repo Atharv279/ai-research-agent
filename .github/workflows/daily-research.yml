@@ -1,3 +1,4 @@
+# Daily automated AI research pipeline
 name: Daily AI Research
 on:
   schedule:
